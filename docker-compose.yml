@@ -1,0 +1,28 @@
+# Use root/developer as user/password credentials
+version: '3.1'
+
+services:
+  mariadb:
+    image: mariadb:${MARIADB_VER}
+    container_name: mariadb_inst
+    restart: always
+    ports:
+      - ${MARIADB_EXTERNAL_PORT}:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: developer
+      MYSQL_DATABASE: example_db
+      MYSQL_USER: nonroot
+      MYSQL_PASSWORD: developer
+    volumes:
+      - ./data/:/var/lib/mysql
+      - ./logs/:/var/log/mysql
+      - ./my.cnf:/etc/mysql/my.cnf
+
+  adminer:
+    image: adminer:4.7
+    container_name: mariadb_adminer
+    restart: always
+    ports:
+      - ${ADMINER_EXTERNAL_PORT}:8080
+    environment:
+      ADMINER_DESIGN: ${ADMINER_DESIGN}
